@@ -29,7 +29,7 @@ function App() {
   return (
     <>
       <Menu />
-      <section className={section}>
+      <section className={section} id="rules">
         <div className={div}>
           <h2 className={h2}>Rules</h2>
           <p className={p}>

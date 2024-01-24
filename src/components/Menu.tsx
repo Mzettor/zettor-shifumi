@@ -69,15 +69,6 @@ const Menu: React.FC = () => {
           >
             Start Game
           </motion.button>
-          <motion.button
-            className={menuButton({ variant: 'primary'})}
-            whileHover={{ scale: 0.9 }}
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, type: 'spring', delay: 0.2 }}
-          >
-            Past Games
-          </motion.button>
           <Settings
             roundsToWin={roundsToWin}
             setRoundsToWin={setRoundsToWin}
@@ -87,7 +78,7 @@ const Menu: React.FC = () => {
             className={menuButton({ variant: 'dark'})}
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, type: 'spring', delay: 0.6 }}
+            transition={{ duration: 0.5, type: 'spring', delay: 0.4 }}
             target="_blank"
             
           >

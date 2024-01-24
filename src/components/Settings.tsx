@@ -94,7 +94,7 @@ const Settings: React.FC<ISettingsProps> = ({ roundsToWin, setRoundsToWin }) => 
             whileHover={{ scale: 0.9 }}
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, type: 'spring', delay: 0.4 }}
+            transition={{ duration: 0.5, type: 'spring', delay: 0.2 }}
           >
             Settings
           </motion.button>

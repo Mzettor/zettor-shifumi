@@ -7,7 +7,7 @@ import './index.css';
 import { css } from '../styled-system/css/css';
 
 const section = css({
-  fontFamily: 'Roboto'
+  fontFamily: 'Roboto',
 });
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
