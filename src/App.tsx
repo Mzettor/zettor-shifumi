@@ -1,17 +1,15 @@
-import Game from "./components/Game";
-import { Toaster } from 'react-hot-toast';
 import Menu from "./components/Menu";
 import { vstack } from "../styled-system/patterns";
 import { css } from "../styled-system/css";
 
 const section = vstack({
   bgColor: 'red.600',
-  color: 'white',
+  color: 'white'
 })
 
 const div = vstack({
   p: '14px 22px',
-  justifyContent: 'center',
+  justifyContent: 'center'
 })
 
 const h2 = css({
@@ -30,13 +28,6 @@ function App() {
 
   return (
     <>
-      <Toaster
-        position='top-center'
-      reverseOrder={false}
-      toastOptions={{
-        duration: 5000
-        }}
-      />
       <Menu />
       <section className={section}>
         <div className={div}>

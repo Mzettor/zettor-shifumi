@@ -1,22 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { css, cva } from '../../styled-system/css';
-import { toast } from 'react-hot-toast';
 import { hstack, vstack } from '../../styled-system/patterns';
-import Images from '../images/Images'
-import GameOver from './GameOver';
 import { motion, useAnimationControls } from 'framer-motion';
+import { toast } from 'react-hot-toast';
+import { determineRoundWinner, determineGameWinner, TMove, generateComputerMove } from '../helpers/helpers';
+import GameOver from './GameOver';
+import Images from '../images/Images'
 
 const gameSection = hstack({
   h: '400px',
   justifyContent: 'center'
 });
 
-
 const gameCard = cva({
   base: {
     color: 'white',
-    borderRadius: 'md',
-
+    borderRadius: 'md'
   },
   variants: {
     header: {
@@ -26,19 +25,19 @@ const gameCard = cva({
         fontSize: '24px',
         display: 'flex',
         justifyContent: 'center',
-        borderBottomRadius: 'unset',
+        borderBottomRadius: 'unset'
       },
     },
     main: {
-    primary: { bgColor: 'primary', shadow: '0 4px 2px -2px gray'},
-      win: { backgroundColor: 'green.500' },
-      loss: { backgroundColor: 'red.600' },
+      primary: {
+        bgColor: 'primary',
+        shadow: '0 4px 2px -2px gray'
+      },
     }
   }
 });
 
 const roundChoice = vstack({
-  // w: 'full',
   w: '300px',
   h: '300px',
   justifyContent: 'center',
@@ -47,19 +46,24 @@ const roundChoice = vstack({
 
 const scores = cva({
   base: {
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
   variants: {
     size: {
       lg: { fontSize: '30px'},
       md: { fontSize: '24px'},
-      sm: { fontSize: '18px', fontWeight: 'initial'},
+      sm: { fontSize: '18px', fontWeight: 'initial'}
     },
     events: {
-      matchPoint: { color: 'red', fontWeight: 'bold'},
+      matchPoint: { color: 'red', fontWeight: 'bold'}
     }
   },
-})
+});
+
+const scoresDiv = vstack({
+  px: '12px',
+  w: '200px'
+});
 
 const controlsSection = hstack({
   h: '238px',
@@ -86,18 +90,16 @@ const controlsIcon = cva({
         h: '120px',
       },
       sm: {
-        w: '50px',
-        h: '50px',
+        w: '70px',
+        h: '70px',
       },
     },
     filter: {
       invert: { filter: 'invert(100%)'}
     }
   },
-})
+});
 
-type TMove = "Rock" | "Paper" | "Scissors";
-type TWinConditions = { [key in TMove]: TMove };
 type TGameProps = {
   isGameStarted: boolean;
   setIsGameStarted: (status: boolean) => void;
@@ -111,31 +113,27 @@ export type TResultsState = {
   gameWinner: "Player" | "Computer" | null; // Assuming gameWinner can be a string or null
 } 
 
-//move to helpers along with generateComputerMove
-const moves: TMove[] = ["Rock", "Paper", "Scissors"];
-
-const Game: React.FC<TGameProps> = ({ isGameStarted, setIsGameStarted, roundsToWin, setRoundsToWin }) => {
-  
-  const [playerMove, setPlayerMove] = useState<string | null>(null);
-  const [computerMove, setComputerMove] = useState<string | null>(null);
-
-  const [roundsPlayed, setRoundsPlayed] = useState<number>(0);
+const Game: React.FC<TGameProps> = ({ isGameStarted, roundsToWin, setRoundsToWin }) => {
+  const [playerMove, setPlayerMove] = useState<TMove | null>(null);
+  const [computerMove, setComputerMove] = useState<TMove | null>(null);
   const [playerScore, setPlayerScore] = useState<number>(0);
   const [computerScore, setComputerScore] = useState<number>(0);
+  const [roundsPlayed, setRoundsPlayed] = useState<number>(0);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [results, setResults] = useState<TResultsState>({
     playerScore: 0,
     computerScore: 0,
     gameWinner: null,
   });
-  
-  const animControls = useAnimationControls();
+    
   // check game winner when scores change
   const isMounted = useRef(false);
   useEffect(() => {
     if (isMounted.current) {
       const gameWinner = determineGameWinner(playerScore, computerScore, roundsToWin);
+      
       if (gameWinner) {
+        resetScores();
         stopGame(playerScore, computerScore, gameWinner);
         toast.success(`Game Over! Winner: ${gameWinner}`, { icon: '🥇', style: { color: gameWinner === 'Player' ? 'green' : 'red'}})
       }
@@ -144,6 +142,8 @@ const Game: React.FC<TGameProps> = ({ isGameStarted, setIsGameStarted, roundsToW
     }
   }, [computerScore, playerScore]);
 
+  const animControls = useAnimationControls();
+
   const resetScores = (): void => {
     setPlayerScore(0);
     setComputerScore(0);
@@ -151,7 +151,7 @@ const Game: React.FC<TGameProps> = ({ isGameStarted, setIsGameStarted, roundsToW
     setPlayerMove(null);
     setComputerMove(null);
   }
-
+  
   const stopGame = (playerScore: number, computerScore: number, gameWinner: "Player" | "Computer"): void => {
     setIsModalOpen(true);
     
@@ -165,32 +165,25 @@ const Game: React.FC<TGameProps> = ({ isGameStarted, setIsGameStarted, roundsToW
     resetScores();
   }
 
-
   const handlePlayerChoice = async (move: TMove) => {
     if (!isGameStarted) return;
-
+    
     const computerMove = generateComputerMove();
     setPlayerMove(move);
     setComputerMove(computerMove);
-
-    // fix this not triggering on first call
-    animControls.set({ scale: 0.5, rotate: 90 });
-    await animControls.start({ opacity: 1, scale: 1, rotate: 0 });
 
     const roundWinner = determineRoundWinner(move, computerMove);
 
     // Update scores based on the round winner
     if (roundWinner === 'Player') {
-      // setPlayerScore(prevPlayerScore => prevPlayerScore + 1);
       setPlayerScore(playerScore + 1);
     } else if (roundWinner === 'Computer') {
       setComputerScore(computerScore + 1);
     }
     setRoundsPlayed(roundsPlayed + 1);
-  }
-
-  const generateComputerMove = () => {
-    return moves[Math.floor(Math.random() * moves.length)];
+    
+    animControls.set({ scale: 0.5, rotate: 90 });
+    await animControls.start({ opacity: 1, scale: 1, rotate: 0 });
   }
 
   return (
@@ -207,7 +200,7 @@ const Game: React.FC<TGameProps> = ({ isGameStarted, setIsGameStarted, roundsToW
                 alt={`${playerMove} Icon`}
                 className={controlsIcon({ size: 'md'})}
                 animate={animControls}
-                transition={{ duration: 0.5, type: 'spring'}}
+                transition={{ type: 'spring'}}
               />
             ) : (
               <motion.img
@@ -215,13 +208,13 @@ const Game: React.FC<TGameProps> = ({ isGameStarted, setIsGameStarted, roundsToW
                 alt={`${playerMove} Icon`}
                 className={controlsIcon({ size: 'md', filter: 'invert'})}
                 animate={animControls}
-                transition={{ duration: 0.5, type: 'spring'}}
+                transition={{ type: 'spring'}}
               />
             )}
           </div>
         </div>
 
-        <div className={vstack({ px: '12px', w: '200px'})}>
+        <div className={scoresDiv}>
           <h3 className={scores({ size: 'md'})}>Round {roundsPlayed}</h3>
           <h4 className={scores({ size: 'lg'})}>{playerScore} - {computerScore}</h4>
           {(playerScore === roundsToWin - 1 || computerScore === roundsToWin - 1) ? (
@@ -242,7 +235,7 @@ const Game: React.FC<TGameProps> = ({ isGameStarted, setIsGameStarted, roundsToW
                 alt={`${computerMove} Icon`}
                 className={controlsIcon({ size: 'md'})}
                 animate={animControls}
-                transition={{ duration: 0.5, type: 'spring'}}
+                transition={{ type: 'spring'}}
               />
             ): (
               <motion.img
@@ -250,7 +243,7 @@ const Game: React.FC<TGameProps> = ({ isGameStarted, setIsGameStarted, roundsToW
                 alt={`${playerMove} Icon`}
                 className={controlsIcon({ size: 'md', filter: 'invert'})}
                 animate={animControls}
-                transition={{ duration: 0.5, type: 'spring'}}
+                transition={{ type: 'spring'}}
               />
             )}
           </div>
@@ -272,54 +265,38 @@ const Game: React.FC<TGameProps> = ({ isGameStarted, setIsGameStarted, roundsToW
             className={controlsButton}
             whileHover={{ scale: 1.1}}
           >
-            <img className={controlsIcon({ size: 'sm'})} src={Images.Rock} alt="Rock Icon" />
+            <img
+                className={controlsIcon({ size: 'sm'})}
+                src={Images.Rock}
+                alt="Rock Icon"
+              />
           </motion.button>
           <motion.button
             onClick={() => handlePlayerChoice('Paper')}
             className={controlsButton}
             whileHover={{ scale: 1.1}}
           >
-            <img className={controlsIcon({ size: 'sm'})} src={Images.Paper} alt="Paper Icon" />
+            <img
+              className={controlsIcon({ size: 'sm'})}
+              src={Images.Paper}
+              alt="Paper Icon"
+            />
           </motion.button>
           <motion.button
             onClick={() => handlePlayerChoice('Scissors')}
             className={controlsButton}
             whileHover={{ scale: 1.1}}
           >
-            <img className={controlsIcon({ size: 'sm'})} src={Images.Scissors} alt="Scissors Icon" />
+            <img
+              className={controlsIcon({ size: 'sm'})}
+              src={Images.Scissors}
+              alt="Scissors Icon"
+            />
           </motion.button>
         </section>
       )}
     </>
   );
 }
-
-// helper functions - put inside helpers folder
-const determineRoundWinner = (playerMove: TMove, computerMove: TMove): 'Player' | 'Computer' | 'Draw' => {
-  const winConditions: TWinConditions = {
-    Rock: 'Scissors',
-    Paper: 'Rock',
-    Scissors: 'Paper',
-  };
-
-  if (playerMove === computerMove) {
-    return 'Draw';
-  } else if (winConditions[playerMove] === computerMove) {
-    return 'Player';
-  } else {
-    return 'Computer';
-  }
-  
-};
-
-const determineGameWinner = (playerScore: number, computerScore: number, roundsToWin: number): 'Player' | 'Computer' | null => {
-  if (playerScore >= roundsToWin) {
-    return 'Player';
-  } else if (computerScore >= roundsToWin) {
-    return 'Computer';
-  } else {
-    return null;
-  }
-};
 
 export default Game;

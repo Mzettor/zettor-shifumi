@@ -1,10 +1,19 @@
 import React from 'react';
-import { css } from '../../styled-system/css';
-import { hstack, vstack } from '../../styled-system/patterns';
+import { vstack } from '../../styled-system/patterns';
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import * as ToggleGroup from '@radix-ui/react-toggle-group';
-import { ISettingsProps, defaultRoundsToWin,  ToggleItem, AlertDialogContent, AlertDialogAction } from './Settings';
+import { ISettingsProps, defaultRoundsToWin,  ToggleItem, AlertDialogContent, AlertDialogAction, AlertDialogOverlay, headerDiv } from './Settings';
 import { TResultsState } from './Game';
+
+const AlertDialogToggle = vstack({
+  w: 'full',
+  py: '12px'
+});
+
+const actionDiv = vstack({
+  w: 'full',
+  py: '12px'
+});
 
 interface IGameOverProps extends ISettingsProps {
   isModalOpen: boolean;
@@ -12,15 +21,14 @@ interface IGameOverProps extends ISettingsProps {
   results: TResultsState;
 }
 
-const GameOver: React.FC<IGameOverProps> = ({ roundsToWin, setRoundsToWin, isModalOpen, setIsModalOpen, results}) => {
-  const {playerScore, computerScore, gameWinner} = results;
+const GameOver: React.FC<IGameOverProps> = ({ roundsToWin, setRoundsToWin, isModalOpen, setIsModalOpen, results: { playerScore, computerScore, gameWinner}}) => {
 
   const resultsDiv= vstack({
     w: 'full',
     color: gameWinner === 'Player' ? 'green.400' : 'primary',
     fontSize: '18px',
     fontWeight: 'bold'
-  })
+  });
   
   const playAgain = (): void => {
     setIsModalOpen(false);
@@ -33,17 +41,10 @@ const GameOver: React.FC<IGameOverProps> = ({ roundsToWin, setRoundsToWin, isMod
     >
         <AlertDialog.Portal>
           <AlertDialog.Overlay
-            className={css({
-              position: 'fixed',
-              inset: '0',
-              animation: "overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1)"
-            })}
+            className={AlertDialogOverlay}
         />
           <AlertDialog.Content className={AlertDialogContent}>
-            <div className={hstack({
-              w: 'full',
-              alignItems: 'center'
-            })}>
+            <div className={headerDiv}>
              <AlertDialog.Title className={resultsDiv}>
               {(gameWinner === "Player") ? <h3>You Won!</h3> : <h3>You Lost.</h3>}
               <p>Score:</p>
@@ -51,10 +52,7 @@ const GameOver: React.FC<IGameOverProps> = ({ roundsToWin, setRoundsToWin, isMod
              </AlertDialog.Title>
             </div>
 
-              <AlertDialog.Description className={vstack({
-                w: 'full',
-                py: '12px'
-              })}>
+              <AlertDialog.Description className={AlertDialogToggle}>
                 <AlertDialog.Action className={AlertDialogAction}>
                   <button onClick={playAgain}>Play Again</button>
                 </AlertDialog.Action>
@@ -76,11 +74,7 @@ const GameOver: React.FC<IGameOverProps> = ({ roundsToWin, setRoundsToWin, isMod
                   </ToggleGroup.Item>
                 </ToggleGroup.Root>
               </AlertDialog.Description>
-              <div className={vstack({
-                  w: 'full',
-                  py: '12px'
-                })}
-              >
+                <div className={actionDiv}>
                 <AlertDialog.Action className={AlertDialogAction}>
                   <a href='/'>Leave</a>
                 </AlertDialog.Action>
