@@ -102,7 +102,7 @@ type TGameProps = {
 export type TResultsState = {
   playerScore: number;
   computerScore: number;
-  gameWinner: "Player" | "Computer" | null; // Assuming gameWinner can be a string or null
+  gameWinner: "Player" | "Computer" | null;
 } 
 
 const Game: React.FC<TGameProps> = ({ isGameStarted, roundsToWin, setRoundsToWin }) => {
