@@ -73,14 +73,6 @@ const controlsSection = hstack({
   alignItems: 'center',
 });
 
-const controlsButton = css({
-  bgColor: 'red.600',
-  p: '12px',
-  mx: '10px',
-  borderRadius: 'md',
-  cursor: 'pointer'
-});
-
 const controlsIcon = cva({
   base: { display: 'flex' },
   variants: {
@@ -120,10 +112,20 @@ const Game: React.FC<TGameProps> = ({ isGameStarted, roundsToWin, setRoundsToWin
   const [computerScore, setComputerScore] = useState<number>(0);
   const [roundsPlayed, setRoundsPlayed] = useState<number>(0);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isControlsDisabled, setIsControlsDisabled] = useState<boolean>(false);
   const [results, setResults] = useState<TResultsState>({
     playerScore: 0,
     computerScore: 0,
     gameWinner: null,
+  });
+
+  const controlsButton = css({
+    bgColor: 'red.600',
+    p: '12px',
+    mx: '10px',
+    borderRadius: 'md',
+    cursor: 'pointer',
+    filter: isControlsDisabled ? 'grayscale(1)' : 'none',
   });
     
   // check game winner when scores change
@@ -167,12 +169,16 @@ const Game: React.FC<TGameProps> = ({ isGameStarted, roundsToWin, setRoundsToWin
 
   const handlePlayerChoice = async (move: TMove) => {
     if (!isGameStarted) return;
+    if (isControlsDisabled) return;
     
     const computerMove = generateComputerMove();
     setPlayerMove(move);
     setComputerMove(computerMove);
 
     const roundWinner = determineRoundWinner(move, computerMove);
+
+    animControls.set({ scale: 0.5, rotate: 90 });
+    await animControls.start({ opacity: 1, scale: 1, rotate: 0 });
 
     // Update scores based on the round winner
     if (roundWinner === 'Player') {
@@ -181,9 +187,15 @@ const Game: React.FC<TGameProps> = ({ isGameStarted, roundsToWin, setRoundsToWin
       setComputerScore(computerScore + 1);
     }
     setRoundsPlayed(roundsPlayed + 1);
-    
-    animControls.set({ scale: 0.5, rotate: 90 });
-    await animControls.start({ opacity: 1, scale: 1, rotate: 0 });
+  }
+
+  const handleControls = (move: TMove): void => {
+    setIsControlsDisabled(true);
+
+    setTimeout(() => {
+      setIsControlsDisabled(false);
+    }, 1300)
+    handlePlayerChoice(move);
   }
 
   return (
@@ -200,7 +212,7 @@ const Game: React.FC<TGameProps> = ({ isGameStarted, roundsToWin, setRoundsToWin
                 alt={`${playerMove} Icon`}
                 className={controlsIcon({ size: 'md'})}
                 animate={animControls}
-                transition={{ type: 'spring'}}
+                transition={{ duration: 0.5, type: 'spring'}}
               />
             ) : (
               <motion.img
@@ -208,7 +220,7 @@ const Game: React.FC<TGameProps> = ({ isGameStarted, roundsToWin, setRoundsToWin
                 alt={`${playerMove} Icon`}
                 className={controlsIcon({ size: 'md', filter: 'invert'})}
                 animate={animControls}
-                transition={{ type: 'spring'}}
+                transition={{ duration: 0.5, type: 'spring'}}
               />
             )}
           </div>
@@ -235,7 +247,7 @@ const Game: React.FC<TGameProps> = ({ isGameStarted, roundsToWin, setRoundsToWin
                 alt={`${computerMove} Icon`}
                 className={controlsIcon({ size: 'md'})}
                 animate={animControls}
-                transition={{ type: 'spring'}}
+                transition={{ duration: 0.5, type: 'spring'}}
               />
             ): (
               <motion.img
@@ -243,7 +255,7 @@ const Game: React.FC<TGameProps> = ({ isGameStarted, roundsToWin, setRoundsToWin
                 alt={`${playerMove} Icon`}
                 className={controlsIcon({ size: 'md', filter: 'invert'})}
                 animate={animControls}
-                transition={{ type: 'spring'}}
+                transition={{ duration: 0.5, type: 'spring'}}
               />
             )}
           </div>
@@ -261,9 +273,9 @@ const Game: React.FC<TGameProps> = ({ isGameStarted, roundsToWin, setRoundsToWin
       {isGameStarted && (
         <section className={controlsSection}>
           <motion.button
-            onClick={() => handlePlayerChoice('Rock')}
+            onClick={() => handleControls('Rock')}
             className={controlsButton}
-            whileHover={{ scale: 1.1}}
+            whileHover={{ scale: 1.1 }}
           >
             <img
                 className={controlsIcon({ size: 'sm'})}
@@ -272,9 +284,9 @@ const Game: React.FC<TGameProps> = ({ isGameStarted, roundsToWin, setRoundsToWin
               />
           </motion.button>
           <motion.button
-            onClick={() => handlePlayerChoice('Paper')}
+            onClick={() => handleControls('Paper')}
             className={controlsButton}
-            whileHover={{ scale: 1.1}}
+            whileHover={{ scale: 1.1 }}
           >
             <img
               className={controlsIcon({ size: 'sm'})}
@@ -283,9 +295,9 @@ const Game: React.FC<TGameProps> = ({ isGameStarted, roundsToWin, setRoundsToWin
             />
           </motion.button>
           <motion.button
-            onClick={() => handlePlayerChoice('Scissors')}
+            onClick={() => handleControls('Scissors')}
             className={controlsButton}
-            whileHover={{ scale: 1.1}}
+            whileHover={{ scale: 1.1 }}
           >
             <img
               className={controlsIcon({ size: 'sm'})}
