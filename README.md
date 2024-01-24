@@ -1,6 +1,6 @@
 # Shifumi Game
 
-![image_info](./pictures/homepage.jpg)]
+![image_info](./pictures/homepage.jpg)
 
 ## Technical Stack
 
