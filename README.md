@@ -1,6 +1,6 @@
 # Shifumi Game
 
-![image_info(pictures/screenshots/home.jpg)]
+![image_info(pictures/home.jpg)]
 
 ## Technical Stack
 
@@ -40,3 +40,43 @@ npm run dev
 ```
 
 4. Open [http://localhost:5173](http://localhost:5173) with your browser.
+
+## Folder Structure
+
+```
+.
+├── index.html
+├── package.json
+├── package-lock.json
+├── panda.config.ts
+├── pictures
+│   └── homepage.jpg
+├── postcss.config.cjs
+├── public
+│   └── vite.svg
+├── README.md
+├── src
+│   ├── App.tsx
+│   ├── assets
+│   │   └── react.svg
+│   ├── components
+│   │   ├── GameOver.tsx
+│   │   ├── Game.tsx
+│   │   ├── Menu.tsx
+│   │   ├── Navbar.tsx
+│   │   └── Settings.tsx
+│   ├── helpers
+│   │   └── helpers.ts
+│   ├── images
+│   │   ├── Images.tsx
+│   │   ├── paper.png
+│   │   ├── rcp.png
+│   │   ├── rock.png
+│   │   └── scissors.png
+│   ├── index.css
+│   ├── main.tsx
+│   └── vite-env.d.ts
+├── tsconfig.json
+├── tsconfig.node.json
+└── vite.config.ts
+```
