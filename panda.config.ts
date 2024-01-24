@@ -12,7 +12,15 @@ export default defineConfig({
 
   // Useful for theme customization
   theme: {
-    extend: {},
+    extend: {
+      tokens: {
+        colors: {
+          primary: { value: '#FF3F34'},
+          dark: { value: '#16161D'},
+          cardHead: { value: '#404048'},
+        }
+      }
+    },
   },
 
   // The output directory for your css system
