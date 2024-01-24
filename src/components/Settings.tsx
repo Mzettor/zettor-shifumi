@@ -20,7 +20,7 @@ export const AlertDialogContent = css({
   borderRadius: 'md',
   animation: "contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1)",
   _focus: {
-    outline: 'none',
+    outline: 'none'
 }})
 
 export const AlertDialogAction = css({
@@ -30,8 +30,33 @@ export const AlertDialogAction = css({
   borderRadius: 'sm',
   transition: '0.6s', 
   _hover: {
-    filter: 'brightness(0.8)',
+    filter: 'brightness(0.8)'
   }
+});
+
+export const AlertDialogOverlay = css({
+  position: 'fixed',
+  inset: '0',
+  animation: "overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1)"
+});
+
+const AlertDialogTitle = css({
+  fontSize: '20px',
+  fontWeight: 'bold',
+  flexGrow: '1'
+});
+
+const AlertDialogToggle = vstack({
+  w: 'full',
+  alignItems: 'flex-start',
+  py: '18px',
+  my: '12px'
+});
+
+const AltTitle = 
+  css({
+    fontSize: '16px',
+    py: '10px'
 });
 
 export const ToggleItem = css({
@@ -44,9 +69,14 @@ export const ToggleItem = css({
   borderColor: 'transparent',
   transition: '0.6s', 
   '&[data-state=on]': {
-    bgColor: 'primary',
-  },
-})
+    bgColor: 'primary'
+  }
+});
+
+export const headerDiv = hstack({
+  w: 'full',
+  alignItems: 'center'
+});
 
 export const defaultRoundsToWin = 3;
 
@@ -56,10 +86,6 @@ export interface ISettingsProps {
 }
 
 const Settings: React.FC<ISettingsProps> = ({ roundsToWin, setRoundsToWin }) => {
-  const resetSettings = (): void => {
-    setRoundsToWin(3);
-  }
-
   return (
     <AlertDialog.Root>
         <AlertDialog.Trigger asChild>
@@ -74,25 +100,11 @@ const Settings: React.FC<ISettingsProps> = ({ roundsToWin, setRoundsToWin }) => 
           </motion.button>
         </AlertDialog.Trigger>
         <AlertDialog.Portal>
-          <AlertDialog.Overlay
-            className={css({
-              position: 'fixed',
-              inset: '0',
-              animation: "overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1)"
-            })}
-        />
+          <AlertDialog.Overlay className={AlertDialogOverlay} />
           <AlertDialog.Content className={AlertDialogContent}>
-            <div className={hstack({
-              w: 'full',
-              alignItems: 'center'
-            })}>
+            <div className={headerDiv}>
             <AlertDialog.Title
-              className={
-              css({
-                fontSize: '20px',
-                fontWeight: 'bold',
-                flexGrow: '1'
-              })}
+              className={AlertDialogTitle}
             >
               Settings
             </AlertDialog.Title>
@@ -101,21 +113,12 @@ const Settings: React.FC<ISettingsProps> = ({ roundsToWin, setRoundsToWin }) => 
              </AlertDialog.Cancel>
             </div>
             <AlertDialog.Title
-              className={
-              css({
-                fontSize: '16px',
-                py: '10px'
-              })}
+              className={AltTitle}
             >
               Edit Rounds to Win
             </AlertDialog.Title>
 
-              <AlertDialog.Description className={vstack({
-                w: 'full',
-                alignItems: 'flex-start',
-                py: '18px',
-                my: '12px'
-              })}>
+              <AlertDialog.Description className={AlertDialogToggle}>
                 <ToggleGroup.Root
                   type='single'
                   defaultValue={roundsToWin.toString()}

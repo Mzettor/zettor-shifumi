@@ -13,31 +13,36 @@ export const icon = css({
   }
 });
 
+const nav = hstack({
+  color: 'white',
+  bgColor: 'dark',
+  p: '10px',
+  justifyContent: 'space-between',
+  alignItems: 'center'
+});
+
+const h1 = css({
+  fontSize: '30px',
+  fontWeight: 'bold',
+});
+
 const Navbar: React.FC = () => {
   return (
     <nav
-      className={hstack({
-        color: 'white',
-        bgColor: 'dark',
-        p: '10px',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-      })}
+      className={nav}
     >
         <span>
           <a href="/">
             <HomeIcon className={icon} />
           </a>
         </span>
-        <h1
-          className={css({
-            fontSize: '30px',
-            fontWeight: 'bold',
-          })}
-        >
+        <h1 className={h1}>
           Shifumi Game
         </h1>
-        <a href="https://github.com/Mzettor/zettor-shifumi" target="_blank">
+        <a
+          href="https://github.com/Mzettor/zettor-shifumi"
+          target="_blank"
+        >
           <GitHubLogoIcon className={icon} />
         </a>
     </nav>

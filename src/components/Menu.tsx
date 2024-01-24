@@ -17,7 +17,7 @@ export const menuButton = cva({
     borderRadius: 'lg',
     shadow: '0 4px 2px -2px gray',
     _hover: {
-      cursor: 'pointer',
+      cursor: 'pointer'
     }
   },
   variants: {
@@ -31,16 +31,12 @@ export const menuButton = cva({
         justifyContent: 'center',
         alignItems: 'center',
         _hover: {
-          filter: 'brightness(0.9)',
+          filter: 'brightness(0.9)'
         }
       },
     }
   }
-})
-
-const div = vstack({
-  p: '22px 0',
-})
+});
 
 export const icon = css({
   w: '20px',
@@ -49,9 +45,11 @@ export const icon = css({
   marginLeft: '8px',
   transition: '0.6ms',
   _hover: {
-    filter: 'brightness(0.9)',
+    filter: 'brightness(0.9)'
   }
 });
+
+const div = vstack({ p: '22px 0' });
 
 const Menu: React.FC = () => {
   const [isGameStarted, setIsGameStarted] = useState<boolean>(false);
@@ -93,10 +91,10 @@ const Menu: React.FC = () => {
             target="_blank"
             
           >
-              Source Code
-              <span>
-                <ArrowTopRightOnSquareIcon className={icon} />
-              </span>
+            Source Code
+            <span>
+              <ArrowTopRightOnSquareIcon className={icon} />
+            </span>
           </motion.a>
           
         </div>
